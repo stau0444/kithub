@@ -10,6 +10,12 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
+    <div th:if="${message}" class="alert alert-success alert-dismissible show" role="alert">
+        <strong th:text="${message}"</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="jumbotron">
         <h1>HELLO SHOP</h1>
         <p class="lead">회원기능</p>
@@ -19,7 +25,7 @@
         </p>
         <p class="lead">상품 기능</p>
         <p>
-            <a class="btn btn-lg btn-dark" href="/items/new">상품 가입</a>
+            <a class="btn btn-lg btn-dark" href="/items/new">상품 등록</a>
             <a class="btn btn-lg btn-dark" href="/items">상품 목록</a>
         </p>
         <p class="lead">주문 기능</p>

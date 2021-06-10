@@ -17,17 +17,21 @@
         </div>
         <div class="form-group">
             <label th:for="stockQuantity">수량</label>
-            <input type="number" th:field="*{stockQuantity}" class="formcontrol" placeholder="수량을 입력하세요">
+            <input type="number" th:field="*{stockQuantity}"  class="form-control" placeholder="수량을 입력하세요">
         </div>
         <div class="form-group">
-            <label th:for="author">저자</label>
-            <input type="text" th:field="*{author}" class="form-control"
+            <label th:for="chef">셰프</label>
+            <input type="text" th:field="*{chef}" class="form-control"
                    placeholder="저자를 입력하세요">
         </div>
         <div class="form-group">
-            <label th:for="isbn">ISBN</label>
-            <input type="text" th:field="*{isbn}" class="form-control"
-                   placeholder="ISBN을 입력하세요">
+            <label th:for="foodType">타입</label>
+            <select th:field="*{foodType}" class="form-control">
+                <option value="WESTERN">양식</option>
+                <option value="KOREAN">한식</option>
+                <option value="JAPANESE">일식</option>
+                <option value="CHINESE">중식</option>
+            </select>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

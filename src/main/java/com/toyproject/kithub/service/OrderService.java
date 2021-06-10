@@ -1,9 +1,6 @@
 package com.toyproject.kithub.service;
 
-import com.toyproject.kithub.domain.Delivery;
-import com.toyproject.kithub.domain.Member;
-import com.toyproject.kithub.domain.Order;
-import com.toyproject.kithub.domain.OrderItem;
+import com.toyproject.kithub.domain.*;
 import com.toyproject.kithub.domain.item.Item;
 import com.toyproject.kithub.repository.ItemRepository;
 import com.toyproject.kithub.repository.MemberRepository;
@@ -35,6 +32,7 @@ public class OrderService {
         //배송정보 생성
         Delivery delivery = new Delivery();
         delivery.setAddress(member.getAddress());
+        delivery.setDeliveryStatus(DeliveryStatus.READY);
 
         //주문상품 생성
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
