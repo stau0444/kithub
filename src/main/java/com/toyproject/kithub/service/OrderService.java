@@ -8,6 +8,7 @@ import com.toyproject.kithub.domain.item.Item;
 import com.toyproject.kithub.repository.ItemRepository;
 import com.toyproject.kithub.repository.MemberRepository;
 import com.toyproject.kithub.repository.OrderRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

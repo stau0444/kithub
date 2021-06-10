@@ -33,8 +33,8 @@ public class OrderItem {
     public static OrderItem createOrderItem(Item item,int orderPrice ,int count){
         OrderItem orderItem = new OrderItem();
         orderItem.setItem(item);
-        orderItem.setOrderPrice(orderPrice);
         orderItem.setCount(count);
+        orderItem.setOrderPrice(orderPrice);
 
         //주문을 했으니 item의 재고 수량을 줄인다.
         item.minusStock(count);

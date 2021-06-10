@@ -1,26 +1,18 @@
 package com.toyproject.kithub.service;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.internal.JsonFormatter;
 import com.toyproject.kithub.domain.*;
 import com.toyproject.kithub.domain.Order;
 import com.toyproject.kithub.domain.item.Food;
 import com.toyproject.kithub.domain.item.FoodType;
-import com.toyproject.kithub.domain.item.Item;
 import com.toyproject.kithub.exception.NotEnoughStockException;
 import com.toyproject.kithub.repository.ItemRepository;
 import com.toyproject.kithub.repository.OrderRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,111 +25,82 @@ class OrderServiceTest {
     @Autowired ItemRepository itemRepository;
     @Autowired EntityManager em;
 
-    @BeforeEach
-    void setOrder(TestInfo testInfo){
-        if (
-                testInfo.getDisplayName().equals("reduceStock")
-                || testInfo.getDisplayName().equals("orderTest")
-                || testInfo.getDisplayName().equals("cancelTest")
-        ){
-            //member 생성
-            Member member = getMember();
+    /*
+    TODO 테스트 수정 필요
+    -상품 주문시 재고가 줄어드는지
+    -상품 주문이 잘되는지
+    -상품
+    */
 
-            //delivery 생성
-            Delivery delivery = new Delivery();
-            delivery.setAddress(member.getAddress());
-
-            Food food = new Food();
-            food.setName("ramen");
-            food.setFoodType(FoodType.JAPANESE);
-            food.setStockQuantity(100);
-            food.setChef("나카모토상");
-            food.setPrice(3000);
-            em.persist(food);
-
-            orderService.order(member.getId(),food.getId(),5);
-        }
-
-    }
-
-    //주문 test
+    //주문 테스트
     @Test
-    @DisplayName(value = "orderTest")
-    void 상품주문() throws  Exception{
+    void orderTest(){
 
-        //when
-        List<Order> all = orderRepository.findAll();
-        Order searchedOrder = all.get(0);
-        //then
-        assertNotNull(searchedOrder);
-    }
-
-    //상품 주문시 재고 수량 초과확인 test
-    @Test
-    @DisplayName(value = "reduceStock")
-    void 상품주문후_재고_수량_감소확인() throws  Exception{
-
-        //when
-        List<Item> items = itemRepository.findAll();
-
-        //then
-        assertEquals(96,items.get(0).getStockQuantity());
-    }
-
-    //상품 초과시 NotEnoughStockException
-    @Test
-    void 상품재고수량_초과시_예외발생() throws  Exception{
         //given
-        //member 생성
-        Member member = getMember();
+        Member member = getMember("member1", new Address("양주", "고읍남로", "12333"));
 
-        //delivery 생성
-        Delivery delivery = new Delivery();
-        delivery.setAddress(member.getAddress());
-
-        Food food = new Food();
-        food.setName("ramen");
-        food.setFoodType(FoodType.JAPANESE);
+        Food food = getFood("나카무라상", 100, 3000, "우동 키트", FoodType.JAPANESE);
 
         //when
-        food.setStockQuantity(3);
-        food.setChef("나카모토상");
-        food.setPrice(3000);
-        em.persist(food);
+        Long orderId = orderService.order(member.getId(), food.getId(), 10);
 
         //then
-        NotEnoughStockException notEnoughStockException = assertThrows(NotEnoughStockException.class, () -> {
-            OrderItem orderItem = OrderItem.createOrderItem(food, food.getPrice(), 4);
-            Order order = Order.creatOrder(member, delivery, orderItem);
-            orderRepository.save(order);
-        });
+        Order getOrder = orderRepository.findOne(orderId);
 
-        System.out.println(notEnoughStockException.getMessage());
+        //주문시 재고수량 감소
+        assertEquals(Status.ORDER, getOrder.getStatus(),"주문시 주문의 상태는 ORDER");
+        assertEquals(1, getOrder.getOrderItems().size(),"주문상품 종류의 수가 정확해야함");
+        assertEquals(30000,getOrder.getTotalPrice(),"주문 총가격은 주문상품 * 주문상품 수량");
+        assertEquals(90, food.getStockQuantity(), "주문한 상품의 재고가 줄어야 한다");
 
     }
+    @Test
+    void 상품주문_재고수량초과() throws  Exception{
+        //given
+        Member member = getMember("ugo", new Address("양주", "고읍남로", "12333"));
+        Food food = getFood("나카무라", 3, 300, "우동", FoodType.JAPANESE);
 
-    private Member getMember() {
+        //when
+
+        //then
+        assertThrows(NotEnoughStockException.class,()->{
+            orderService.order(member.getId(), food.getId(), 11);
+        });
+    }
+
+
+    //주문 취소
+    @Test
+    void cancel() throws  Exception{
+        //given
+        Member member = getMember("member1", new Address("뉴욕시", "뉴욕로", "4044"));
+        Food food = getFood("안드레아", 100, 2000, "스테이크", FoodType.WESTERN);
+        //when
+        Long orderId = orderService.order(member.getId(), food.getId(), 10);
+        orderService.cancelOrder(orderId);
+        Order findOrder = orderRepository.findOne(orderId);
+        //then
+        assertEquals(100,food.getStockQuantity(),"취소시 상품의 재고가 원복되야 한다.");
+        assertEquals(Status.CANCEL,findOrder.getStatus(),"주문 취소시 주문상태는 CANCEL이다.");
+    }
+
+
+    private Food getFood(String chef, int stockQuantity, int price, String name, FoodType foodType) {
+        Food food = new Food();
+        food.setFoodType(foodType);
+        food.setChef(chef);
+        food.setStockQuantity(stockQuantity);
+        food.setPrice(price);
+        food.setName(name);
+        em.persist(food);
+        return food;
+    }
+
+    private Member getMember(String name, Address address) {
         Member member = new Member();
-        member.setName("member1");
-        member.setAddress(new Address("서울", "시청로", "12000"));
+        member.setName(name);
+        member.setAddress(address);
         em.persist(member);
         return member;
-    }
-
-
-    //주문 취소(취소시 재고가 원복이 되는지 , 주문 상태가 바뀌는지지) test
-    @Test
-    @DisplayName("cancelTest")
-    void 취소시_상품재고_원복확인() throws  Exception{
-        //given
-        List<Order> all = orderRepository.findAll();
-        Order order = all.get(0);
-        //when
-        order.cancel();
-        //then;
-        List<Item> items = itemRepository.findAll();
-        Item item = items.get(0);
-
-        assertEquals(100,item.getStockQuantity());
     }
 }
