@@ -1,5 +1,6 @@
 package com.toyproject.kithub.service;
 
+import com.toyproject.kithub.controller.FoodForm;
 import com.toyproject.kithub.domain.item.Food;
 import com.toyproject.kithub.domain.item.FoodType;
 import com.toyproject.kithub.domain.item.Item;
@@ -24,8 +25,8 @@ class ItemServiceTest {
     @Test
     void Save_Item_And_Update_Stock_Quantity() throws  Exception{
         //given
-        Food food = new Food();
-        food.setStockQuantity(100);
+
+        Food food = Food.createFood(new FoodForm());
         Long save = itemRepository.save(food);
         //when
         Item savedItem = itemRepository.findOne(save);
@@ -39,7 +40,7 @@ class ItemServiceTest {
     @Test
     void findItemsTest() throws  Exception{
         //given
-        Food food = new Food();
+        Food food = Food.createFood(new FoodForm());
         food.setName("김밥");
         food.setFoodType(FoodType.KOREAN);
         Lecture lecture = new Lecture();

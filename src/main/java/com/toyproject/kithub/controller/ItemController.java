@@ -3,6 +3,7 @@ package com.toyproject.kithub.controller;
 import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.kithub.domain.item.Food;
+import com.toyproject.kithub.domain.item.Handmade;
 import com.toyproject.kithub.domain.item.Item;
 import com.toyproject.kithub.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -54,18 +55,18 @@ public class ItemController {
     public String updateItemForm(@PathVariable Long itemId,Model model){
 
         Food searchedItem = (Food)itemService.findOne(itemId);
-        UpdateForm updateForm = modelMapper.map(searchedItem,UpdateForm.class);
-        model.addAttribute("form",updateForm);
+        FoodForm foodForm = modelMapper.map(searchedItem,FoodForm.class);
+        model.addAttribute("form",foodForm);
 
         return "items/updateItemForm";
     }
 
     @PostMapping("/items/{itemId}/edit")
     @Transactional
-    public  RedirectView updateItem(@PathVariable Long itemId,UpdateForm updateForm){
+    public  RedirectView updateItem(@PathVariable Long itemId,FoodForm updateForm){
 
-        Food searchedItem = (Food) itemService.findOne(itemId);
-        searchedItem.updateItem(updateForm);
+
+        itemService.updateItem(itemId,updateForm);
 
         return new RedirectView("/items",true);
     }

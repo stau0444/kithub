@@ -3,10 +3,7 @@ package com.toyproject.kithub.domain.item;
 import com.toyproject.kithub.controller.FoodForm;
 import com.toyproject.kithub.domain.Category;
 import com.toyproject.kithub.exception.NotEnoughStockException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn
@@ -53,4 +50,11 @@ public abstract class Item {
     }
 
 
+    public void updateItem(Food food) {
+        food.setPrice(food.getPrice());
+        food.setName(food.getName());
+        food.setStockQuantity(food.getStockQuantity());
+        food.setChef(food.getChef());
+        food.setFoodType(food.getFoodType());
+    }
 }

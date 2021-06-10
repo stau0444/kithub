@@ -9,13 +9,11 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-
-    <div th:if="${message}" class="alert alert-success alert-dismissible show" role="alert">
-        <strong th:text="${message}"</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <div th:if="${message}" class="alert alert-success alert-dismissible ">
+        <button type = "button" class="close" data-dismiss = "alert">x</button>
+        <strong th:text="${message}"></strong>
     </div>
+
     <div class="jumbotron">
         <h1>HELLO SHOP</h1>
         <p class="lead">회원기능</p>
@@ -38,4 +36,9 @@
    <div th:replace="fragments/footer :: footer"/>
 </div>
 </body>
+<script>
+    $(".close").on('click',function(){
+        $(".alert-dismissible").addClass("fade");
+    });
+</script>
 </html>

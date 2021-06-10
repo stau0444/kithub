@@ -1,5 +1,7 @@
 package com.toyproject.kithub.service;
 
+import com.toyproject.kithub.controller.FoodForm;
+import com.toyproject.kithub.domain.item.Food;
 import com.toyproject.kithub.domain.item.Item;
 import com.toyproject.kithub.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,12 @@ public class ItemService {
     @Transactional
     public void saveItem(Item item){
         itemRepository.save(item);
+    }
+
+    @Transactional
+    public void  updateItem(Long itemId, FoodForm updateForm){
+        Food searchedItem = (Food) itemRepository.findOne(itemId);
+        searchedItem.updateItem(updateForm);
     }
 
     public List<Item> findItem(){

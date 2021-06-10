@@ -2,11 +2,7 @@ package com.toyproject.kithub.domain.item;
 
 
 import com.toyproject.kithub.controller.FoodForm;
-import com.toyproject.kithub.controller.UpdateForm;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -26,7 +22,7 @@ public class Food  extends Item{
     @Enumerated(value = EnumType.STRING)
     private FoodType foodType;
 
-    public void updateItem(UpdateForm updateForm){
+    public void updateItem(FoodForm updateForm){
         this.setName(updateForm.getName());
         this.setStockQuantity(updateForm.getStockQuantity());
         this.setPrice(updateForm.getPrice());
