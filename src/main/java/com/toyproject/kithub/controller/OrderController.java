@@ -12,10 +12,7 @@ import com.toyproject.kithub.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -38,12 +35,15 @@ public class OrderController {
         List<Member> members = memberService.findMembers();
         model.addAttribute("items" , item);
         model.addAttribute("members",members);
-        model.addAttribute("order");
+
         return "order/orderForm";
     }
     @PostMapping("/order")
-    public RedirectView order(Long memberId , Long itemId , int count,RedirectAttributes attributes,
-    @ModelAttribute String message){
+    public RedirectView order(@RequestParam("memberId") Long memberId ,
+                              @RequestParam("itemId") Long itemId ,
+                              @RequestParam("count") int count,
+                              RedirectAttributes attributes,
+                              @ModelAttribute String message){
         Long order = orderService.order(memberId, itemId, count);
         if(order != null){
             attributes.addFlashAttribute("message","주문이 성공했습니다.");
@@ -55,6 +55,13 @@ public class OrderController {
     public String getOrderList(Model model){
         List<Order> orders = orderRepository.findAll();
         model.addAttribute("orderSearch",new OrderSearch());
+        model.addAttribute("orders",orders);
+        return "order/orders";
+    }
+
+    @GetMapping("/ordersearch")
+    public String search(OrderSearch orderSearch, Model model){
+        List<Order> orders = orderRepository.search(orderSearch);
         model.addAttribute("orders",orders);
         return "order/orders";
     }

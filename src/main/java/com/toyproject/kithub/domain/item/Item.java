@@ -1,6 +1,5 @@
 package com.toyproject.kithub.domain.item;
 
-import com.toyproject.kithub.controller.FoodForm;
 import com.toyproject.kithub.domain.Category;
 import com.toyproject.kithub.exception.NotEnoughStockException;
 import lombok.*;

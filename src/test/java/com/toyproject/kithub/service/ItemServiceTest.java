@@ -1,6 +1,6 @@
 package com.toyproject.kithub.service;
 
-import com.toyproject.kithub.controller.FoodForm;
+import com.toyproject.kithub.controller.form.FoodForm;
 import com.toyproject.kithub.domain.item.Food;
 import com.toyproject.kithub.domain.item.FoodType;
 import com.toyproject.kithub.domain.item.Item;

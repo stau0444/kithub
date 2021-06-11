@@ -2,6 +2,7 @@ package com.toyproject.kithub.repository;
 
 import com.toyproject.kithub.domain.Order;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,13 +26,19 @@ public class OrderRepository {
 
         // 검색 조건에서 상태값이 있을경우 아래의 쿼리를 타지만
         // 상태값이 없을 경우에 다들고 오게 동적 쿼리가 필요하다 .
-        return em.createQuery("select o from Order o join o.member m" +
-                                " where o.status = :status " +
-                                " and m.name like :name ",Order.class)
-                .setParameter("status",orderSearch.getOrderStatus())
-                .setParameter("name",orderSearch.getMemberName())
-                .getResultList();
+
+        if(orderSearch.getOrderStatus() == null && orderSearch.getMemberName().equals("")){
+            return em.createQuery("select o from Order o").getResultList();
+        }else {
+            return em.createQuery("select o from Order o join o.member m" +
+                    " where o.status = :status " +
+                    " and m.name like :name ",Order.class)
+                    .setParameter("status",orderSearch.getOrderStatus())
+                    .setParameter("name",orderSearch.getMemberName())
+                    .getResultList();
+        }
     }
+
     public List<Order> findAll(){
         return em.createQuery("select o from Order o",Order.class).getResultList();
     }

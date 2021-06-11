@@ -1,7 +1,7 @@
 package com.toyproject.kithub.domain.item;
 
 
-import com.toyproject.kithub.controller.FoodForm;
+import com.toyproject.kithub.controller.form.FoodForm;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;

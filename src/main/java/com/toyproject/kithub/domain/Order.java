@@ -3,6 +3,7 @@ package com.toyproject.kithub.domain;
 
 import com.toyproject.kithub.exception.CannotCancelException;
 import lombok.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import java.lang.annotation.Target;

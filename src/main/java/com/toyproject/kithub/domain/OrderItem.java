@@ -1,5 +1,6 @@
 package com.toyproject.kithub.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.toyproject.kithub.domain.item.Item;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

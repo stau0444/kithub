@@ -48,7 +48,7 @@ public class MemberService {
         memberRepository.save(member);
         return member.getId();
     }
-
+    @Transactional(readOnly = true)
     private void validateDuplicateMember(Member member) {
         List<Member> byName = memberRepository.findByName(member.getName());
         if (!byName.isEmpty()){
@@ -65,7 +65,12 @@ public class MemberService {
     @Transactional(readOnly = true)
     //readOnly = true 조회하는 곳에서는 더티체킹이나 플러쉬가 안 일어난다
     //성능이 최적화 되어있다.
-    public Member findOne(Member member){
-        return memberRepository.findOne(member.getId());
+    public Member findOne(Long id){
+        return memberRepository.findOne(id);
+    }
+
+    public void updateMember(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
     }
 }
