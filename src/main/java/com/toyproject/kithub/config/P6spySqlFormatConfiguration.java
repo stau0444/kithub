@@ -3,7 +3,6 @@ package com.toyproject.kithub.config;
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 import org.hibernate.engine.jdbc.internal.FormatStyle;
-import org.springframework.context.annotation.Configuration;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
