@@ -1,9 +1,8 @@
 package com.toyproject.kithub.repository;
 
-import com.toyproject.kithub.apicontroller.OrderSimpleApiController;
 import com.toyproject.kithub.domain.Order;
+import com.toyproject.kithub.repository.order.query.SimpleOrderQueryDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

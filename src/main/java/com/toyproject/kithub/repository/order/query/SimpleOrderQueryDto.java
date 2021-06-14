@@ -1,4 +1,4 @@
-package com.toyproject.kithub.repository;
+package com.toyproject.kithub.repository.order.query;
 
 import com.toyproject.kithub.domain.Address;
 import com.toyproject.kithub.domain.Order;
